@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import Link from "next/link";
 import AddProductDialog from "../Home/AddProductDiloge";
+import { Button } from "../ui/button";
 
 const navigationMenuItems = [
   { title: "Home", href: "#" },
@@ -32,7 +33,17 @@ const Navbar = () => {
             ))}
           </NavigationMenuList>
         </NavigationMenu>
-          <AddProductDialog/>
+          <div className="flex gap-3 items-center">
+            <AddProductDialog/>
+            <Link href="/login">
+
+          <Button className="cursor-pointer">Login</Button>
+            </Link>
+            <Link href="/cart">
+
+          <Button className="cursor-pointer">Cart</Button>
+            </Link>
+          </div>
       </div>
     </div>
   );

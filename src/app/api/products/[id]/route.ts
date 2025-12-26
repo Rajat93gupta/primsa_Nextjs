@@ -16,6 +16,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
 
         // 3. Ensure the ID is a valid number
         const productId = parseInt(id);
+        // for validation
         if (isNaN(productId)) {
             return Response.json({ error: "Invalid ID format" }, { status: 400 });
         }
