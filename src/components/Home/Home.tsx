@@ -1,7 +1,10 @@
 "use client";
 
+import { GetAllProducts } from "@/app/api/Functions/GetProducts";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import Navbar from "../Navbar/Navbar";
+import AddProductDialog from "./AddProductDiloge";
 
 interface Product {
   id: number;
@@ -16,16 +19,18 @@ const HomePage = () => {
   const [data, setData] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+ 
+  
 
-  const fetchProducts = async () => {
+   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const res = await fetch("/api/products");
+      const res = await GetAllProducts();
+       setData(res);
 
-      if (!res.ok) throw new Error("Failed to fetch products");
+     
 
-      const jsonData = await res.json();
-      setData(jsonData);
+     
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
@@ -41,7 +46,10 @@ const HomePage = () => {
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
+    <>
+       <AddProductDialog onSuccess={fetchProducts} />
     <div className="bg-white grid grid-cols-3 gap-4 p-4">
+       
       {data.map((item) => (
         <div key={item.id} className="border p-3 rounded">
           <h1 className="font-bold">{item.title}</h1>
@@ -51,6 +59,9 @@ const HomePage = () => {
         </div>
       ))}
     </div>
+    
+    </>
+
   );
 };
 

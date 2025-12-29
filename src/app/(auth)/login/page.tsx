@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,8 +13,45 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  const handleSubmit = async (e?: React.FormEvent) => {
+    e?.preventDefault();
+    console.log(email, password);
+    if (!email || !password) {
+      alert("All fields are required");
+      return;
+    }
+    try {
+      setLoading(true);
+      const res = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        alert(data.message || "Login failed");
+        return;
+      }
+      // localStorage.setItem("token", data.token);
+      alert("Login successful");
+      router.push("/home");
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="flex items-center justify-center min-h-screen">
       <Card className="w-full max-w-sm">
@@ -24,7 +62,9 @@ const Login = () => {
           </CardDescription>
           <CardAction>
             <Link href="/signup">
-            <Button variant="link" className="cursor-pointer">Sign Up</Button>
+              <Button variant="link" className="cursor-pointer">
+                Sign Up
+              </Button>
             </Link>
           </CardAction>
         </CardHeader>
@@ -36,6 +76,8 @@ const Login = () => {
                 <Input
                   id="email"
                   type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="m@example.com"
                   required
                 />
@@ -50,14 +92,24 @@ const Login = () => {
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" required />
+                <Input
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  type="password"
+                  required
+                />
               </div>
             </div>
           </form>
         </CardContent>
         <CardFooter className="flex-col gap-2">
-          <Button type="submit" className="w-full cursor-pointer">
-            Login
+          <Button
+            onClick={handleSubmit}
+            type="submit"
+            className="w-full cursor-pointer"
+          >
+            {loading ? "Logging in..." : "Login"}
           </Button>
           <Button variant="outline" disabled className="w-full">
             Login with Google

@@ -11,7 +11,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-const AddProductDialog = () => {
+interface AddProductDialogProps {
+  onSuccess?: () => void; // callback after adding product
+}
+
+const AddProductDialog = ({ onSuccess }: AddProductDialogProps) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -41,6 +45,10 @@ const AddProductDialog = () => {
       });
 
       if (!res.ok) throw new Error("Failed to add product");
+      if(res.ok){
+        alert("Product added successfully");
+        onSuccess?.();
+      }
 
       setOpen(false);
       setForm({
