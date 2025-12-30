@@ -11,10 +11,23 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import AddProductDialog from "@/components/Home/AddProductDiloge";
+import { DeleteProductById } from "@/app/api/Functions/DeleteProduct";
 
 // 1. Define the Product interface to fix TypeScript errors
 interface Product {
@@ -29,6 +42,7 @@ const Products = () => {
   // 2. Initialize state with the Product type
   const [data, setData] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deleteId, setDeleteId] = useState<number | null>(null);
   const [error, setError] = useState("");
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
@@ -81,6 +95,20 @@ const Products = () => {
     }
   };
 
+  const handleDelete = async (id: number) => {
+    try {
+      setLoading(true);
+      const res = await DeleteProductById(id);
+      console.log(res);
+
+      fetchProducts();
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // 3. Handle Loading and Error states in the UI
   if (loading)
     return <div className="p-10 text-center">Loading products...</div>;
@@ -91,16 +119,19 @@ const Products = () => {
     <div className="container mx-auto py-10">
       <div className="flex justify-between items-center border-b pb-5">
         <h1 className="text-3xl font-bold mb-6">Products</h1>
-        <div className="w-full max-w-xs">
-          <Label htmlFor="picture">Upload products</Label>
-          <Input
-            id="picture"
-            type="file"
-            accept=".xlsx,.xls"
-            className="mt-2"
-            onChange={handleFileUpload}
-            disabled={uploading}
-          />
+        <div className="w-full flex gap-3 items-center max-w-xs">
+          <AddProductDialog onSuccess={fetchProducts} />
+          <div>
+            <Label htmlFor="picture">Upload products</Label>
+            <Input
+              id="picture"
+              type="file"
+              accept=".xlsx,.xls"
+              className="mt-2"
+              onChange={handleFileUpload}
+              disabled={uploading}
+            />
+          </div>
           {uploading && (
             <p className="text-sm text-blue-500 mt-2">Uploading products...</p>
           )}
@@ -119,6 +150,7 @@ const Products = () => {
             <TableHead>Price</TableHead>
             <TableHead className="hidden md:table-cell">Description</TableHead>
             <TableHead className="text-right">Image</TableHead>
+            <TableHead className="text-right">Action</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -142,6 +174,14 @@ const Products = () => {
                   />
                 </div>
               </TableCell>
+              <TableCell className="text-right">
+                <button
+                  onClick={() => setDeleteId(product.id)}
+                  className="text-red-500 cursor-pointer hover:underline"
+                >
+                  Delete
+                </button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -154,6 +194,30 @@ const Products = () => {
           </TableRow>
         </TableFooter>
       </Table>
+      <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the
+              product.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                if (deleteId) handleDelete(deleteId);
+                setDeleteId(null);
+              }}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              Yes, Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

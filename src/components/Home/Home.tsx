@@ -3,8 +3,8 @@
 import { GetAllProducts } from "@/app/api/Functions/GetProducts";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import Navbar from "../Navbar/Navbar";
-import AddProductDialog from "./AddProductDiloge";
+
+import Link from "next/link";
 
 interface Product {
   id: number;
@@ -47,16 +47,18 @@ const HomePage = () => {
 
   return (
     <>
-       <AddProductDialog onSuccess={fetchProducts} />
+      
     <div className="bg-white grid grid-cols-3 gap-4 p-4">
        
       {data.map((item) => (
-        <div key={item.id} className="border p-3 rounded">
+        <Link key={item.id} href={`/home/${item.title}?id=${item.id}`}>
+        <div  className="border p-3 rounded">
           <h1 className="font-bold">{item.title}</h1>
           <p>{item.description}</p>
           <p className="font-semibold">₹{item.price}</p>
           <Image src={item.image} alt={item.title} width={100} height={100} />
         </div>
+        </Link>
       ))}
     </div>
     

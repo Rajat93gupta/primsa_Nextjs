@@ -19,7 +19,7 @@ const menuItems = [
   },
   {
     label: "Users",
-    href: "/admin",
+    href: "/admin/users",
     icon: Users,
   },
 ];

@@ -1,8 +1,8 @@
 'use client'
 import { GetUser } from '@/app/api/Functions/GetUser';
+import Cart from '@/components/Home/Cart/Cart';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import React, { useEffect, useState } from 'react'
+import  { useEffect, useState } from 'react'
 
 const Page = () => {
   const [user, setUser] = useState<{ name: string } | null>(null);
@@ -22,14 +22,7 @@ const Page = () => {
   return (
     <div className="p-4">
       {user ? (
-        <Card className="w-full max-w-sm">
-          <CardHeader>
-            <CardTitle>Welcome, {user.name}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p>This is your dashboard or content card.</p>
-          </CardContent>
-        </Card>
+        <Cart/>
       ) : (
         <Button onClick={() => (window.location.href = "/login")}>
           Please Login
