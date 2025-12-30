@@ -44,7 +44,11 @@ const Login = () => {
       }
       // localStorage.setItem("token", data.token);
       alert("Login successful");
-      router.push("/home");
+      if (data.user.role === "ADMIN") {
+        router.push("/admin");
+      } else {
+        router.push("/home");
+      }
     } catch (err) {
       console.log(err);
     } finally {

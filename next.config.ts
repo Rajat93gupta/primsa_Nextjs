@@ -1,13 +1,20 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   images: {
     remotePatterns: [
+      // FakeStore (existing)
       {
         protocol: "https",
         hostname: "fakestoreapi.com",
         pathname: "/img/**",
+      },
+
+      // ✅ Cloudinary
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+        pathname: "/**",
       },
     ],
   },
