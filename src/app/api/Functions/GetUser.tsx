@@ -5,7 +5,7 @@ const GetUser = async () => {
       cache: "no-store",
       credentials: "include", // important for HttpOnly cookie
     });
-    console.log(response);
+    // console.log(response);
     
 
     if (!response.ok) {
@@ -13,7 +13,7 @@ const GetUser = async () => {
     }
 
     const data = await response.json();
-    console.log(data,"data");
+    // console.log(data,"data");
     
     return data.user; // return the user object
   } catch (err) {

@@ -31,26 +31,29 @@ export async function POST(req: NextRequest) {
     const products = [];
 
     for (const item of data) {
-      console.log("ROW:", item); // 🔥 ADD THIS
-
-      if (!item.image) {
-        throw new Error("Image URL missing in Excel");
+      if (!item.title || !item.price || !item.category || !item.image) {
+        console.log("❌ Skipped row:", item);
+        continue;
       }
 
       const uploadRes = await cloudinary.uploader.upload(item.image, {
         folder: "products",
       });
+      console.log(item);
+      
 
       products.push({
-        title: item.title,
+        title: item.title.trim(),
         price: Number(item.price),
         description: item.description || null,
-        category: item.category,
+        category: item.category.trim(),
         image: uploadRes.secure_url,
       });
     }
 
-    await prisma.product.createMany({ data: products });
+    await prisma.product.createMany({ data: products, skipDuplicates: true });
+    // console.log("PRISMA INSERT RESULT 👉", result);
+    console.log("PRODUCTS TO INSERT 👉", products.length);
 
     return NextResponse.json({
       success: true,

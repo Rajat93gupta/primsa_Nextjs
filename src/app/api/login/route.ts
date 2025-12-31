@@ -31,6 +31,8 @@ export async function POST(req: Request) {
     process.env.JWT_SECRET!,
     { expiresIn: "7d" }
   );
+  console.log(token);
+  
 
   const res = NextResponse.json({
     user: {

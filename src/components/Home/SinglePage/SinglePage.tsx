@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { GetAllProducts } from "@/app/api/Functions/GetProducts";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
+import { useCart } from "@/Context/CartContext";
 
 interface Product {
   id: number;
@@ -16,6 +17,7 @@ interface Product {
 
 const SinglePage = () => {
   const [product, setProduct] = useState<Product | null>(null);
+  const [added, setAdded] = useState(false);
   const param = useSearchParams().get("id");
   console.log(param);
 
@@ -30,6 +32,20 @@ const SinglePage = () => {
   }, [param]);
   console.log(product);
   const { description, price, image, title } = product || {};
+  const { addToCart } = useCart();
+
+const handleAddToCart = async () => {
+  if (!product) return;
+
+  try {
+    await addToCart(product);
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1500);
+  } catch (error) {
+    console.error("Add to cart failed", error);
+  }
+};
+
 
   return (
     <div className="container mx-auto">
@@ -50,8 +66,11 @@ const SinglePage = () => {
               </div>
               <div className="flex -mx-2 mb-4">
                 <div className="w-1/2 px-2">
-                  <button className="w-full bg-gray-900 dark:bg-gray-600 text-white py-2 px-4 rounded-full font-bold hover:bg-gray-800 dark:hover:bg-gray-700">
-                    Add to Cart
+                  <button
+                    onClick={handleAddToCart}
+                    className="w-full bg-gray-900 dark:bg-gray-600 text-white py-2 px-4 rounded-full font-bold hover:bg-gray-800 dark:hover:bg-gray-700"
+                  >
+                    {added ? "Added!" : "Add to Cart"}
                   </button>
                 </div>
                 <div className="w-1/2 px-2">

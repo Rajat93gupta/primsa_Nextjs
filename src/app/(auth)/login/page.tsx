@@ -14,12 +14,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/Context/AuthContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { setUser } = useAuth(); 
 
   const handleSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault();
@@ -42,6 +44,7 @@ const Login = () => {
         alert(data.message || "Login failed");
         return;
       }
+      setUser(data.user); 
       // localStorage.setItem("token", data.token);
       alert("Login successful");
       if (data.user.role === "ADMIN") {

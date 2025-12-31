@@ -12,6 +12,8 @@ type User = {
 type AuthContextType = {
   user: User | null;
   loading: boolean 
+  setUser: (user: User | null) => void;
+  
   logout: () => Promise<void>;
 };
 
@@ -19,12 +21,13 @@ const AuthContext = createContext<AuthContextType>({
   user: null,
   logout: async () => {},
   loading: true,
+  setUser: () => {},
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  console.log(user);
+  // console.log(user);
   
  useEffect(() => {
     const fetchUser = async () => {
@@ -41,7 +44,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, logout,loading }}>
+    <AuthContext.Provider value={{ user,setUser, logout,loading }}>
       {children}
     </AuthContext.Provider>
   );

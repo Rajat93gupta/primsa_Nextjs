@@ -13,25 +13,47 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 enum Role {
   ADMIN
   USER
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  email    String @unique
+  id       Int     @id @default(autoincrement())
+  email    String  @unique
   password String
   name     String?
-  role     Role   @default(USER)
+  role     Role    @default(USER)
+  cart     Cart?
 }
 
+
 model Product {
-  id   Int @id @default(autoincrement())
-  title String
-  price Float
+  id          Int     @id @default(autoincrement())
+  title       String  @unique
+  price       Float
   description String?
-  image   String
-  category String
+  image       String
+  category    String
+  cartItems   CartItem[]
+}
+
+model Cart {
+  id        Int        @id @default(autoincrement())
+  userId    Int        @unique
+  user      User       @relation(fields: [userId], references: [id])
+  items     CartItem[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+model CartItem {
+  id        Int      @id @default(autoincrement())
+  cartId   Int
+  productId Int
+  quantity Int      @default(1)
+
+  cart     Cart     @relation(fields: [cartId], references: [id])
+  product  Product  @relation(fields: [productId], references: [id])
+
+  @@unique([cartId, productId]) // same product only once per cart
 }
