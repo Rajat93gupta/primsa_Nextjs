@@ -39,12 +39,12 @@ const Navbar = () => {
         <div className="flex gap-3 flex-1 justify-end items-center">
           {!loading &&
             (user ? (
-              <Button variant="destructive" onClick={logout}>
+              <Button variant="destructive" className="cursor-pointer" onClick={logout}>
                 Logout
               </Button>
             ) : (
               <Link href="/login">
-                <Button>Login</Button>
+                <Button className="cursor-pointer">Login</Button>
               </Link>
             ))}
           <Link href="/cart">

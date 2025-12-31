@@ -50,6 +50,14 @@ export async function POST(req: Request) {
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
   });
+   // Set role cookie (accessible in frontend/middleware)
+  res.cookies.set("role", user.role, {
+    httpOnly: false, // frontend/middleware needs to read it
+    path: "/",
+    maxAge: 60 * 60 * 24 * 7, // 7 days
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
 
   return res;
 }

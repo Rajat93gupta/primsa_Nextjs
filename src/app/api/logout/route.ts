@@ -8,6 +8,7 @@ export async function POST() {
     path: "/",
     maxAge: 0,
   });
+   res.cookies.set("role", "", { path: "/", maxAge: 0 });
 
   return res;
 }

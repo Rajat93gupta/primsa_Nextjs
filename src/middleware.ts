@@ -6,6 +6,10 @@ export function middleware(req: NextRequest) {
 
   const token = req.cookies.get("token")?.value;
   const role = req.cookies.get("role")?.value;
+  console.log(role,"role");
+  console.log(token,"role");
+
+  
 
   // Auth required
   if (
@@ -19,7 +23,7 @@ export function middleware(req: NextRequest) {
 
   // Admin only
   if (pathname.startsWith("/admin")) {
-    if (!token || role !== "ADMIN") {
+    if (!token || role?.toUpperCase() !== "ADMIN") {
       return NextResponse.redirect(new URL("/", req.url));
     }
   }
