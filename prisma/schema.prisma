@@ -79,6 +79,8 @@ enum OrderStatus {
   PAID
   FAILED
   CANCELLED
+  DELIVERD
+  DELIVERED
 }
 
 model Order {

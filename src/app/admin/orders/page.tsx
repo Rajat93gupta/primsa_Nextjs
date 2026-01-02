@@ -51,6 +51,8 @@ const Orders = () => {
         credentials: 'include',
         body: JSON.stringify({ status: newStatus }),
       })
+      console.log(res);
+      
       if (!res.ok) throw new Error('Failed to update order')
       const data = await res.json()
     console.log(data);
@@ -95,7 +97,6 @@ const Orders = () => {
               >
                 <option value="PENDING">PENDING</option>
                 <option value="PAID">PAID</option>
-                <option value="ON_WAY">ON_WAY</option>
                 <option value="DELIVERED">DELIVERED</option>
                 <option value="FAILED">FAILED</option>
                 <option value="CANCELLED">CANCELLED</option>
